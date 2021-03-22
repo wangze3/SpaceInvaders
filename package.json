@@ -1,0 +1,10 @@
+{
+  "name": "SpaceInvaders",
+  "version": "1.0.0",
+  "dependencies": {
+    "ably": "^1.2.6",
+    "dotenv": "^8.2.0",
+    "express": "latest",
+    "p2": "^0.7.1"
+  }
+}
