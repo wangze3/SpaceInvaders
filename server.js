@@ -5,14 +5,12 @@ const p2 = require("p2");
 const app = express();
 const ABLY_API_KEY = process.env.ABLY_API_KEY;
 
-const CANVAS_HEIGHT = 750;
-const CANVAS_WIDTH = 1400;
 const SHIP_PLATFORM = 718;
 const PLAYER_VERTICAL_INCREMENT = 20;
 const PLAYER_VERTICAL_MOVEMENT_UPDATE_INTERVAL = 1000;
 const PLAYER_SCORE_INCREMENT = 5;
 const P2_WORLD_TIME_STEP = 1 / 16;
-const MIN_PLAYERS_TO_START_GAME = 5;
+const MIN_PLAYERS_TO_START_GAME = 3;
 const GAME_TICKER_MS = 100;
 
 let peopleAccessingTheWebsite = 0;
