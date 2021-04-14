@@ -1,5 +1,3 @@
-import * as Ably from "ably";
-
 let gameRoom;
 let deadPlayerCh;
 let myClientId;

@@ -21,11 +21,23 @@
     <link rel="stylesheet" href="/style.css">
     <!-- link to Phaser CDN -->
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+    <!--import Ably-->
+    <script
+            lang="text/javascript"
+            src="https://cdn.ably.io/lib/ably.min-1.js"
+    ></script>
     <!-- link to the script -->
+    <script src="/explosion.js"></script>
     <script src="/script.js" defer></script>
 </head>
 
 <body class="index-body">
+    <div>
+        <div style="float: left;"><span id="score">Score: 0</span></div>
+        <div style="float: right;"><span id="join-leave-updates"></span></div>
+        <div style="float: right;"><span id="deaths"></span></div>
+    </div>
+    <br />
     <!--this div will house our game canvas-->
     <div class="game-div" id="gameContainer"></div>
 </body>

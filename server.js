@@ -46,7 +46,7 @@ const uniqueId = function () {
     return "id-" + totalPlayers + Math.random().toString(36).substr(2, 16);
 };
 
-app.use(express.static("js"));
+app.use(express.static(__dirname + '/public'));
 
 app.get("/auth", (request, response) => {
     const tokenParams = { clientId: uniqueId() };
