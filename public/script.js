@@ -37,77 +37,77 @@ class GameScene extends Phaser.Scene {
     preload() {
         this.loadAsset(
             "avatarA",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FInvaderA_00%402x.png?v=1589228669385",
+            "https://s3.amazonaws.com/wangze.space-invader/InvaderA_00.png",
             48,
             32);
         this.loadAsset(
             "avatarB",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FInvaderB_00%402x.png?v=1589228660870",
+            "https://s3.amazonaws.com/wangze.space-invader/InvaderB_00.png",
             48,
             32);
         this.loadAsset(
             "avatarC",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FInvaderC_00%402x.png?v=1589228654058",
+            "https://s3.amazonaws.com/wangze.space-invader/InvaderC_00.png",
             48,
             32);
         this.loadAsset(
             "avatarAgreen",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderAgreen.png?v=1589839188589",
+            "https://s3.amazonaws.com/wangze.space-invader/invaderAgreen.png",
             48,
             48);
         this.loadAsset(
             "avatarAcyan",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderAcyan.png?v=1589839190850",
+            "https://s3.amazonaws.com/wangze.space-invader/invaderAcyan.png",
             48,
             48);
         this.loadAsset(
             "avatarAyellow",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderAyellow.png?v=1589839197191",
+            "https://s3.amazonaws.com/wangze.space-invader/invaderAyellow.png",
             48,
             48);
         this.loadAsset(
             "avatarBgreen",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderBgreen.png?v=1589839187283",
+            "https://s3.amazonaws.com/wangze.space-invader/invaderBgreen.png",
             48,
             48);
         this.loadAsset(
             "avatarBcyan",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderBcyan.png?v=1589839193162",
+            "https://s3.amazonaws.com/wangze.space-invader/invaderBcyan.png",
             48,
             48);
         this.loadAsset(
             "avatarByellow",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderByellow.png?v=1589839195096",
+            "https://s3.amazonaws.com/wangze.space-invader/invaderByellow.png",
             48,
             48);
         this.loadAsset(
             "avatarCgreen",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderCgreen.png?v=1589839203129",
+            "https://s3.amazonaws.com/wangze.space-invader/invaderCgreen.png",
             48,
             48);
         this.loadAsset(
             "avatarCcyan",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderCcyan.png?v=1589839200959",
+            "https://s3.amazonaws.com/wangze.space-invader/invaderCcyan.png",
             48,
             48);
         this.loadAsset(
             "avatarCyellow",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderCyellow.png?v=1589839198988",
+            "https://s3.amazonaws.com/wangze.space-invader/invaderCyellow.png",
             48,
             48);
         this.loadAsset(
             "ship",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FShip%402x.png?v=1589228730678",
+            "https://s3.amazonaws.com/wangze.space-invader/Ship.png",
             60,
             32);
         this.loadAsset(
             "bullet",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2Fbullet.png?v=1589229887570",
+            "https://s3.amazonaws.com/wangze.space-invader/bullet.png",
             32,
             48);
         this.loadAsset(
             "explosion",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2Fexplosion57%20(2).png?v=1589491279459",
+            "https://s3.amazonaws.com/wangze.space-invader/explosion57.png",
             48,
             48);
     }

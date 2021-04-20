@@ -24,7 +24,7 @@ input {
     text-align: center;
     color: #fff;
     background-color: black;
-    background-image: url("https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FScreenshot%202020-05-19%20at%2013.36.26.png?v=1589892011044");
+    background-image: url("https://s3.amazonaws.com/wangze.space-invader/background.png");
 }
 
 .intro-img {
@@ -38,7 +38,7 @@ input {
     text-align: center;
     color: #fff;
     background-color: black;
-    background-image: url("https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FScreenshot%202020-05-19%20at%2013.36.26.png?v=1589892011044");
+    background-image: url("https://s3.amazonaws.com/wangze.space-invader/background.png");
 }
 
 .index-body {
@@ -137,7 +137,7 @@ input {
     text-align: center;
     color: #fff;
     background-color: black;
-    background-image: url("https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FScreenshot%202020-05-19%20at%2013.36.26.png?v=1589892011044");
+    background-image: url("https://s3.amazonaws.com/wangze.space-invader/background.png");
 }
 
 .winner-div {
@@ -278,7 +278,7 @@ label {
 .game-card {
     margin: 10px 50px;
     padding: 50px;
-    background-image: url("https://user-images.githubusercontent.com/5900152/90127067-85382380-dd5c-11ea-87b1-4946c0df92d8.jpg");
+    background-image: url("https://s3.amazonaws.com/wangze.space-invader/gameCard.jpg");
 }
 
 .info-bar {
