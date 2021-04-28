@@ -8,15 +8,13 @@ let totalPlayers = 0;
 let latestShipPosition;
 let bulletThatShotMe;
 let bulletThatShotSomeone;
-let bulletOutOfBounds = "";
 let amIalive = false;
 let game;
 
-const BASE_SERVER_URL = "http://localhost:3000";
 const myNickname = localStorage.getItem("nickname");
 
 const realtime = Ably.Realtime({
-    authUrl: BASE_SERVER_URL + "/auth",
+    authUrl: "/auth",
 });
 
 realtime.connection.once("connected", () => {
@@ -160,9 +158,9 @@ class GameScene extends Phaser.Scene {
             deadPlayerCh.unsubscribe();
             myChannel.unsubscribe();
             if (msg.data.winner === "Nobody") {
-                window.location.replace(BASE_SERVER_URL + "/gameover");
+                window.location.replace("/gameover");
             } else {
-                window.location.replace(BASE_SERVER_URL + "/winner");
+                window.location.replace("/winner");
             }
         });
     }
