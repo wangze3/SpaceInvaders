@@ -1,7 +1,7 @@
-let gameRoom;
-let deadPlayerCh;
+let globalChannel;
 let myClientId;
 let myChannel;
+let myChannelName;
 let gameOn = false;
 let players = {};
 let totalPlayers = 0;
@@ -10,113 +10,173 @@ let bulletThatShotMe;
 let bulletThatShotSomeone;
 let amIalive = false;
 let game;
+let myGameRoomName;
+let myGameRoomCh;
 
 const myNickname = localStorage.getItem("nickname");
+const myGameRoomCode = localStorage.getItem("roomCode");
+const amIHost = localStorage.getItem("isHost");
+const startGameBtn = document.getElementById("btn-startgame");
+const audioControlChkbox = document.getElementById("audio-chkbox");
 
+document.getElementById("room-code").innerHTML =
+    "Other players can join using the code: " + myGameRoomCode;
+
+// connect to Ably
 const realtime = Ably.Realtime({
     authUrl: "/auth",
 });
 
+//show modal
+if (amIHost === "true") {
+    document.querySelector(".bg-modal").style.display = "flex";
+    document.getElementById("game-link").innerHTML =
+        "Invite your friends to join using the code: <br/>" + myGameRoomCode;
+    document.querySelector(".close").addEventListener("click", () => {
+        document.querySelector(".bg-modal").style.display = "none";
+    });
+}
+
+function copyGameCode() {
+    navigator.clipboard.writeText(myGameRoomCode);
+    let copyButton = document.getElementById("copy-button");
+    copyButton.style.backgroundColor = "white";
+    copyButton.style.color = "black";
+    copyButton.style.border = "2px solid black";
+    copyButton.innerHTML = "Copied!";
+}
+
+// once connected to Ably, instantiate channels and launch the game
 realtime.connection.once("connected", () => {
     myClientId = realtime.auth.clientId;
-    gameRoom = realtime.channels.get("game-room");
-    deadPlayerCh = realtime.channels.get("dead-player");
-    myChannel = realtime.channels.get("clientChannel-" + myClientId);
-    gameRoom.presence.enter(myNickname);
+    myGameRoomName = myGameRoomCode + ":primary";
+    myChannelName = myGameRoomCode + ":clientChannel-" + myClientId;
+    myGameRoomCh = realtime.channels.get(myGameRoomName);
+    myChannel = realtime.channels.get(myChannelName);
+
+    if (amIHost === "true") {
+        const globalGameName = "main-game-thread";
+        globalChannel = realtime.channels.get(globalGameName);
+        myGameRoomCh.subscribe("thread-ready", (msg) => {
+            myGameRoomCh.presence.enter({
+                nickname: myNickname,
+                isHost: amIHost,
+            });
+        });
+        globalChannel.presence.enter({
+            nickname: myNickname,
+            roomCode: myGameRoomCode,
+            isHost: amIHost,
+        });
+        startGameBtn.style.display = "inline-block";
+    } else if (amIHost !== "true") {
+        myGameRoomCh.presence.enter({
+            nickname: myNickname,
+            isHost: amIHost,
+        });
+        startGameBtn.style.display = "none";
+    }
     game = new Phaser.Game(config);
 });
 
+function startGame() {
+    myChannel.publish("start-game", {
+        start: true,
+    });
+}
+
+// primary game scene
 class GameScene extends Phaser.Scene {
     constructor() {
         super("gameScene");
     }
 
-    //load assets
     preload() {
-        this.loadAsset(
-            "avatarA",
-            "https://s3.amazonaws.com/wangze.space-invader/InvaderA_00.png",
-            48,
-            32);
-        this.loadAsset(
-            "avatarB",
-            "https://s3.amazonaws.com/wangze.space-invader/InvaderB_00.png",
-            48,
-            32);
-        this.loadAsset(
-            "avatarC",
-            "https://s3.amazonaws.com/wangze.space-invader/InvaderC_00.png",
-            48,
-            32);
-        this.loadAsset(
-            "avatarAgreen",
-            "https://s3.amazonaws.com/wangze.space-invader/invaderAgreen.png",
-            48,
-            48);
-        this.loadAsset(
-            "avatarAcyan",
-            "https://s3.amazonaws.com/wangze.space-invader/invaderAcyan.png",
-            48,
-            48);
-        this.loadAsset(
-            "avatarAyellow",
-            "https://s3.amazonaws.com/wangze.space-invader/invaderAyellow.png",
-            48,
-            48);
-        this.loadAsset(
-            "avatarBgreen",
-            "https://s3.amazonaws.com/wangze.space-invader/invaderBgreen.png",
-            48,
-            48);
-        this.loadAsset(
-            "avatarBcyan",
-            "https://s3.amazonaws.com/wangze.space-invader/invaderBcyan.png",
-            48,
-            48);
-        this.loadAsset(
-            "avatarByellow",
-            "https://s3.amazonaws.com/wangze.space-invader/invaderByellow.png",
-            48,
-            48);
-        this.loadAsset(
-            "avatarCgreen",
-            "https://s3.amazonaws.com/wangze.space-invader/invaderCgreen.png",
-            48,
-            48);
-        this.loadAsset(
-            "avatarCcyan",
-            "https://s3.amazonaws.com/wangze.space-invader/invaderCcyan.png",
-            48,
-            48);
-        this.loadAsset(
-            "avatarCyellow",
-            "https://s3.amazonaws.com/wangze.space-invader/invaderCyellow.png",
-            48,
-            48);
-        this.loadAsset(
+        this.load.spritesheet(
+            "avatarAanimated",
+            "https://s3.amazonaws.com/wangze.space-invader/avatarAanimated.png",
+            {
+                frameWidth: 48,
+                frameHeight: 32,
+            }
+        );
+        this.load.spritesheet(
+            "avatarBanimated",
+            "https://s3.amazonaws.com/wangze.space-invader/avatarBanimated.png",
+            {
+                frameWidth: 48,
+                frameHeight: 32,
+            }
+        );
+        this.load.spritesheet(
+            "avatarCanimated",
+            "https://s3.amazonaws.com/wangze.space-invader/avatarCanimated.png",
+            {
+                frameWidth: 48,
+                frameHeight: 32,
+            }
+        );
+        this.load.spritesheet(
             "ship",
-            "https://s3.amazonaws.com/wangze.space-invader/Ship.png",
-            60,
-            32);
-        this.loadAsset(
+            "https://s3.amazonaws.com/wangze.space-invader/Ship%402x.png",
+            {
+                frameWidth: 60,
+                frameHeight: 32,
+            }
+        );
+        this.load.spritesheet(
             "bullet",
             "https://s3.amazonaws.com/wangze.space-invader/bullet.png",
-            32,
-            48);
-        this.loadAsset(
+            {
+                frameWidth: 48,
+                frameHeight: 48,
+            }
+        );
+        this.load.spritesheet(
             "explosion",
-            "https://s3.amazonaws.com/wangze.space-invader/explosion57.png",
-            48,
-            48);
+            "https://s3.amazonaws.com/wangze.space-invader/explosion.png",
+            {
+                frameWidth: 48,
+                frameHeight: 48,
+            }
+        );
+        this.load.audio(
+            "move1",
+            "https://s3.amazonaws.com/wangze.space-invader/fastinvader1.mp3"
+        );
+        this.load.audio(
+            "move2",
+            "https://s3.amazonaws.com/wangze.space-invader/fastinvader2.mp3"
+        );
+        this.load.audio(
+            "move3",
+            "https://s3.amazonaws.com/wangze.space-invader/fastinvader3.mp3"
+        );
+        this.load.audio(
+            "move4",
+            "https://s3.amazonaws.com/wangze.space-invader/fastinvader4.mp3"
+        );
+        this.load.audio(
+            "myDeath",
+            "https://s3.amazonaws.com/wangze.space-invader/explosion.mp3"
+        );
+        this.load.audio(
+            "opponentDeath",
+            "https://s3.amazonaws.com/wangze.space-invader/invaderkilled.mp3"
+        );
+        this.load.audio(
+            "shoot",
+            "https://s3.amazonaws.com/wangze.space-invader/shoot.mp3"
+        );
     }
 
-    //init variables, define animations & sounds, and display assets
-    create(){
+    create() {
         this.avatars = {};
         this.visibleBullets = {};
         this.ship = {};
         this.cursorKeys = this.input.keyboard.createCursorKeys();
 
+        // explode animation to play when a bullet hits an avatar
         this.anims.create({
             key: "explode",
             frames: this.anims.generateFrameNumbers("explosion"),
@@ -125,7 +185,49 @@ class GameScene extends Phaser.Scene {
             hideOnComplete: true,
         });
 
-        gameRoom.subscribe("game-state", (msg) => {
+        this.anims.create({
+            key: "animateA",
+            frames: this.anims.generateFrameNumbers("avatarAanimated"),
+            frameRate: 2,
+            repeat: -1,
+        });
+
+        this.anims.create({
+            key: "animateB",
+            frames: this.anims.generateFrameNumbers("avatarBanimated"),
+            frameRate: 2,
+            repeat: -1,
+        });
+
+        this.anims.create({
+            key: "animateC",
+            frames: this.anims.generateFrameNumbers("avatarCanimated"),
+            frameRate: 2,
+            repeat: -1,
+        });
+
+        this.soundLoop = 0;
+        this.shootSound = this.sound.add("shoot");
+        this.move1 = this.sound.add("move1");
+        this.move2 = this.sound.add("move2");
+        this.move3 = this.sound.add("move3");
+        this.move4 = this.sound.add("move4");
+        this.myDeathSound = this.sound.add("myDeath");
+        this.opponentDeathSound = this.sound.add("opponentDeath");
+        this.movingSounds = [this.move1, this.move2, this.move3, this.move4];
+
+        setInterval(() => {
+            if (audioControlChkbox.checked === true) {
+                this.movingSounds[this.soundLoop].play();
+                this.soundLoop++;
+                if (this.soundLoop === 4) {
+                    this.soundLoop = 0;
+                }
+            }
+        }, 500);
+
+        // subscribe to the game tick
+        myGameRoomCh.subscribe("game-state", (msg) => {
             if (msg.data.gameOn) {
                 gameOn = true;
                 if (msg.data.shipBody["0"]) {
@@ -148,15 +250,15 @@ class GameScene extends Phaser.Scene {
             totalPlayers = msg.data.playerCount;
         });
 
-        gameRoom.subscribe("game-over", (msg) => {
+        // subscribe to the game over event and switch to a new page
+        myGameRoomCh.subscribe("game-over", (msg) => {
             gameOn = false;
             localStorage.setItem("totalPlayers", msg.data.totalPlayers);
             localStorage.setItem("winner", msg.data.winner);
             localStorage.setItem("firstRunnerUp", msg.data.firstRunnerUp);
             localStorage.setItem("secondRunnerUp", msg.data.secondRunnerUp);
-            gameRoom.unsubscribe();
-            deadPlayerCh.unsubscribe();
-            myChannel.unsubscribe();
+            myGameRoomCh.detach();
+            myChannel.detach();
             if (msg.data.winner === "Nobody") {
                 window.location.replace("/gameover");
             } else {
@@ -165,24 +267,29 @@ class GameScene extends Phaser.Scene {
         });
     }
 
-    //update the attributes of various game objects per game logic
     update() {
         if (gameOn) {
+            // create and update the position of the ship
             if (this.ship.x) {
                 this.ship.x = latestShipPosition;
             } else {
                 this.ship = this.physics.add
-                    .sprite(latestShipPosition, config.height - 32, "ship")
+                    .sprite(latestShipPosition, config.scale.height - 32, "ship")
                     .setOrigin(0.5, 0.5);
+
                 this.ship.x = latestShipPosition;
             }
+            // create and update the position of the bullets
             for (let item in this.visibleBullets) {
                 if (this.visibleBullets[item].toLaunch) {
                     this.visibleBullets[item].toLaunch = false;
                     this.createBullet(this.visibleBullets[item]);
                 } else {
                     this.visibleBullets[item].bulletSprite.y -= 20;
-                    if (this.visibleBullets[item].bulletSprite.y < 0 || this.visibleBullets[item].id === bulletThatShotSomeone) {
+                    if (
+                        this.visibleBullets[item].bulletSprite.y < 0 ||
+                        this.visibleBullets[item].id === bulletThatShotSomeone
+                    ) {
                         this.visibleBullets[item].bulletSprite.destroy();
                         delete this.visibleBullets[item];
                     }
@@ -190,6 +297,7 @@ class GameScene extends Phaser.Scene {
             }
         }
 
+        // remove avatars of players that have left the game
         for (let item in this.avatars) {
             if (!players[item]) {
                 this.avatars[item].destroy();
@@ -197,6 +305,7 @@ class GameScene extends Phaser.Scene {
             }
         }
 
+        // create and update avatars and scores of all the players
         for (let item in players) {
             let avatarId = players[item].id;
             if (this.avatars[avatarId] && players[item].isAlive) {
@@ -209,12 +318,15 @@ class GameScene extends Phaser.Scene {
             } else if (!this.avatars[avatarId] && players[item].isAlive) {
                 if (players[item].id !== myClientId) {
                     let avatarName =
-                        "avatar" +
-                        players[item].invaderAvatarType +
-                        players[item].invaderAvatarColor;
+                        "avatar" + players[item].invaderAvatarType + "animated";
                     this.avatars[avatarId] = this.physics.add
                         .sprite(players[item].x, players[item].y, avatarName)
-                        .setOrigin(0.5, 0.5);
+                        .setOrigin(0.5, 0.5)
+                        .setTintFill(players[item].invaderAvatarColor.toString());
+                    console.log(players[item].invaderAvatarColor);
+                    this.avatars[avatarId].play(
+                        "animate" + players[item].invaderAvatarType
+                    );
                     this.avatars[avatarId].setCollideWorldBounds(true);
                     document.getElementById("join-leave-updates").innerHTML =
                         players[avatarId].nickname + " joined";
@@ -222,10 +334,14 @@ class GameScene extends Phaser.Scene {
                         document.getElementById("join-leave-updates").innerHTML = "";
                     }, 2000);
                 } else if (players[item].id === myClientId) {
-                    let avatarName = "avatar" + players[item].invaderAvatarType;
+                    let avatarName =
+                        "avatar" + players[item].invaderAvatarType + "animated";
                     this.avatars[avatarId] = this.physics.add
                         .sprite(players[item].x, players[item].y, avatarName)
                         .setOrigin(0.5, 0.5);
+                    this.avatars[avatarId].play(
+                        "animate" + players[item].invaderAvatarType
+                    );
                     this.avatars[avatarId].setCollideWorldBounds(true);
                     amIalive = true;
                 }
@@ -233,22 +349,23 @@ class GameScene extends Phaser.Scene {
                 this.explodeAndKill(avatarId);
             }
         }
+
+        // check for user input
         this.publishMyInput();
     }
 
-    loadAsset(name, url, frameWidth, frameHeight) {
-        this.load.spritesheet(
-            name,
-            url,
-            {
-                frameWidth: frameWidth,
-                frameHeight: frameHeight
-            }
-        );
-    }
-
+    // play the explosion animation and destroy the avatar
     explodeAndKill(deadPlayerId) {
         this.avatars[deadPlayerId].disableBody(true, true);
+        if (deadPlayerId === myClientId) {
+            if (audioControlChkbox.checked === true) {
+                this.myDeathSound.play();
+            }
+        } else {
+            if (audioControlChkbox.checked === true) {
+                this.opponentDeathSound.play();
+            }
+        }
         let explosion = new Explosion(
             this,
             this.avatars[deadPlayerId].x,
@@ -262,6 +379,7 @@ class GameScene extends Phaser.Scene {
         }, 2000);
     }
 
+    // publish user input to the game server
     publishMyInput() {
         if (Phaser.Input.Keyboard.JustDown(this.cursorKeys.left) && amIalive) {
             myChannel.publish("pos", {
@@ -277,13 +395,16 @@ class GameScene extends Phaser.Scene {
         }
     }
 
+    // create a new bullet sprite
     createBullet(bulletObject) {
         let bulletId = bulletObject.id;
         this.visibleBullets[bulletId].bulletSprite = this.physics.add
-            .sprite(this.ship.x - 8, bulletObject.y, "bullet")
+            .sprite(this.ship.x + 23, bulletObject.y, "bullet")
             .setOrigin(0.5, 0.5);
-
-        //add an overlap callback if the current player is still alive
+        if (audioControlChkbox.checked === true) {
+            this.shootSound.play();
+        }
+        // add an overlap callback if the current player is still alive
         if (amIalive) {
             if (
                 this.physics.add.overlap(
@@ -299,25 +420,36 @@ class GameScene extends Phaser.Scene {
         }
     }
 
+    // publish an eventto the server if the current player is hit
     publishMyDeathNews(bullet, avatar) {
         if (amIalive) {
-            deadPlayerCh.publish("dead-notif", {
+            myChannel.publish("dead-notif", {
                 killerBulletId: bulletThatShotMe,
                 deadPlayerId: myClientId,
             });
         }
         amIalive = false;
     }
-
 }
 
+//game configuration
 const config = {
-    width: 1400,
-    height: 750,
+    type: Phaser.AUTO,
     backgroundColor: "#FFFFF",
-    parent: "gameContainer",
+    scale: {
+        parent: "gameContainer",
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: 1400,
+        height: 700,
+    },
+    //canvasStyle: "border:1px solid #ffffff;",
     scene: [GameScene],
     physics: {
-        default: "arcade"
-    }
+        default: "arcade",
+        arcade: {
+            debug: false,
+        },
+    },
+
 };

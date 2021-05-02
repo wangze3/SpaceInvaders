@@ -7,38 +7,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Multiplayer space invaders" />
     <link
-            id="favicon"
             rel="icon"
             href="https://s3.amazonaws.com/wangze.space-invader/spaceinvaders.ico"
             type="image/x-icon"
     />
-    <!-- link to arcade style font -->
     <link
-            href="https://fonts.googleapis.com/css2?family=VT323&display=swap"
             rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=VT323&display=swap"
     />
-    <!-- link to stylesheet -->
-    <link rel="stylesheet" href="/style.css">
-    <!-- link to Phaser CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
-    <!--import Ably-->
+    <link rel="stylesheet" href="/style.css" />
+
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.23.0/dist/phaser.min.js"></script>
     <script
             lang="text/javascript"
             src="https://cdn.ably.io/lib/ably.min-1.js"
     ></script>
-    <!-- link to the script -->
+    <script src="/intro.js"></script>
     <script src="/explosion.js"></script>
     <script src="/script.js" defer></script>
 </head>
 
 <body class="index-body">
-    <div>
-        <div style="float: left;"><span id="score">Score: 0</span></div>
-        <div style="float: right;"><span id="join-leave-updates"></span></div>
-        <div style="float: right;"><span id="deaths"></span></div>
+<div class="bg-modal">
+    <div class="modal-content">
+        <div class="close">x</div>
+        <img
+                class="copy"
+                src="https://s3.amazonaws.com/wangze.space-invader/copyIcon.png"
+                alt="copy icon"
+        />
+        <label id="game-link"></label>
+        <button
+                onclick="copyGameCode()"
+                id="copy-button"
+                type="button"
+                class="button"
+        >
+            Copy game link
+        </button>
     </div>
-    <br />
-    <!--this div will house our game canvas-->
-    <div class="game-div" id="gameContainer"></div>
+</div>
+<div class="container">
+    <div class="info-bar row row-cols-1 row-cols-sm-2 row-cols-md-4">
+        <div id="score" class="col">Score: 0</div>
+        <div id="room-code" class="col">Game room 0</div>
+        <div id="join-leave-updates" class="col"></div>
+        <div id="deaths" class="col"></div>
+        <div class="audio-control">
+            <label class="audio-label" for="audio-chkbox">Audio</label>
+            <input class="audio-chkbox" type="checkbox" id="audio-chkbox" name="toggle-audio"/>
+        </div>
+    </div>
+</div>
+<div class="card game-card">
+    <div id="gameContainer"></div>
+</div>
+<div class="start-btn-div">
+    <button
+            id="btn-startgame"
+            class="btn btn-primary"
+            onclick="startGame()"
+    >
+        Start game
+    </button>
+</div>
 </body>
+
 </html>

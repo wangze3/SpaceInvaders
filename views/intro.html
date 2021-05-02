@@ -3,11 +3,10 @@
 <head>
     <meta charset="utf-8" />
     <title>Space Invaders</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Multiplayer space invaders" />
     <link
-            id="favicon"
             rel="icon"
             href="https://s3.amazonaws.com/wangze.space-invader/spaceinvaders.ico"
             type="image/x-icon"
@@ -19,48 +18,130 @@
             crossorigin="anonymous"
     />
     <link
-            href="https://fonts.googleapis.com/css2?family=VT323&display=swap"
             rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=VT323&display=swap"
     />
     <link rel="stylesheet" href="/style.css" />
 </head>
+
 <body class="intro-body">
 <img
+        class="intro-img"
+        src="https://s3.amazonaws.com/wangze.space-invader/banner.png"
         alt="Space invaders"
-        width="580"
-        height="250"
-        src="https://s3.amazonaws.com/files.ably.io/tutorials/multiplayer-space-invaders/headerAbly.png"
 />
-<div class="game-instructions">
-    <p>
-        Use the arrow keys on your keyboard to move your avatar left or right to
-        escape the bullets from the spaceship.<br />
-        Your goal is to make it to the other side, alive!
-    </p>
-</div>
-<div class="input-group nickname-input">
-    <input
-            type="text"
-            class="form-control"
-            placeholder="Enter your nickname"
-            aria-label="Enter your nickname"
-            aria-describedby="basic-addon2"
-            id="nickname"
-    />
-    <div class="input-group-append">
-        <a href="gameplay">
-          <span class="input-group-text" id="go-span" onclick="setNickname()"
-          >GO
-          </span>
-        </a>
+<p class="game-text game-instructions">
+    Use the arrow keys on your keyboard to move your avatar left or right to
+    escape the bullets from the spaceship. Your goal is to make it to the
+    other side, alive!
+</p>
+<!--start-->
+<div class="room-input">
+    <div class="card text-center start-info-card">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-flex" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a
+                            class="nav-link"
+                            id="launch-tab"
+                            data-toggle="tab"
+                            href="#launch"
+                            role="tab"
+                            aria-controls="launch"
+                            aria-selected="false"
+                    >Create a game room</a
+                    >
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a
+                            class="nav-link active"
+                            id="join-tab"
+                            data-toggle="tab"
+                            href="#join"
+                            role="tab"
+                            aria-controls="join"
+                            aria-selected="true"
+                    >Join a game room</a
+                    >
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div
+                        class="tab-pane fade"
+                        id="launch"
+                        role="tabpanel"
+                        aria-labelledby="launch-tab"
+                >
+                    <div id="create-tab" class="card-body">
+                        <div class="form-group">
+                            <input
+                                    type="text"
+                                    class="form-control input-box"
+                                    id="create-nickname"
+                                    placeholder="Enter a nickname"
+                            />
+                        </div>
+                        <button
+                                id="btn-join"
+                                class="btn btn-primary"
+                                onclick="hostNewGame()"
+                        >
+                            GO
+                        </button>
+                    </div>
+                </div>
+                <div
+                        class="tab-pane fade show active"
+                        id="join"
+                        role="tabpanel"
+                        aria-labelledby="join-tab"
+                >
+                    <div class="card-body">
+                        <div class="form-group">
+                            <input
+                                    type="text"
+                                    class="form-control input-box"
+                                    id="join-nickname"
+                                    placeholder="Enter a nickname"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <input
+                                    type="text"
+                                    class="form-control input-box"
+                                    id="join-room-code"
+                                    placeholder="Enter room code"
+                            />
+                        </div>
+                        <button
+                                id="btn-create"
+                                class="btn btn-primary"
+                                onclick="joinRoom()"
+                        >
+                            JOIN
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<img
-        alt="Invader avatars"
-        width="60%"
-        height="300"
-        src="https://s3.amazonaws.com/wangze.space-invader/allInvaders.png"
-/>
-<script src="/nickname.js"></script>
+
+<script
+        src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"
+></script>
+<script
+        src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"
+></script>
+<script
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"
+></script>
+<script src="./intro.js"></script>
 </body>
 </html>

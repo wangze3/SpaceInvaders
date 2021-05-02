@@ -19,7 +19,7 @@ input {
 }
 
 .intro-body {
-    font-family: "VT323";
+    font-family: "VT323", serif;
     font-size: 22px;
     text-align: center;
     color: #fff;
@@ -33,7 +33,7 @@ input {
 }
 
 .room-full-body {
-    font-family: "VT323";
+    font-family: "VT323", serif;
     font-size: 52px;
     text-align: center;
     color: #fff;
@@ -42,7 +42,7 @@ input {
 }
 
 .index-body {
-    font-family: "VT323";
+    font-family: "VT323", serif;
     font-size: 22px;
     color: #fff;
     background-color: black;
@@ -132,7 +132,7 @@ input {
 }
 
 .winner-body {
-    font-family: "VT323";
+    font-family: "VT323", serif;
     font-size: 62px;
     text-align: center;
     color: #fff;
@@ -188,7 +188,7 @@ input {
     border-radius: 10px;
     text-decoration: none;
     font-size: 16px;
-    font-family: "VT323";
+    font-family: "VT323", serif;
     color: white;
     background-color: #000;
 }
