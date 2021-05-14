@@ -38,6 +38,26 @@ if (amIHost === "true") {
 }
 
 function copyGameCode() {
+    if (typeof(navigator.clipboard) === 'undefined') {
+        console.log('navigator.clipboard');
+        var textArea = document.createElement("textarea");
+        textArea.value = linkToGo;
+        textArea.style.position = "fixed";   //avoid scrolling to bottom
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+            var successful = document.execCommand('copy');
+            var msg = successful ? 'successful' : 'unsuccessful';
+            toastr.info(msg);
+        } catch (err) {
+            toastr.warning('Was not possible to copy te text: ', err);
+        }
+
+        document.body.removeChild(textArea);
+        return;
+    }
     navigator.clipboard.writeText(myGameRoomCode);
     let copyButton = document.getElementById("copy-button");
     copyButton.style.backgroundColor = "white";
